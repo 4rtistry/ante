@@ -1,0 +1,21 @@
+.container_2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content_2{
+    width: 500px;
+    background-color: #fff;
+    padding: 15px 30px;
+    border-radius: 10px;
+    color: #000;
+}
+
+.content_2 textarea{
+    width: 100%;
+}
+
+.content_2 button{
+    width: 100%;
+}
