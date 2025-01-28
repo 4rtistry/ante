@@ -1,6 +1,14 @@
-<h1>sadhkajdhkajhdkjad</h1>
-<textarea cols="30" rows="10" [value]="NewPost" [(ngModel)]="PostInput" placeholder="Write your text here"></textarea>
-<hr>
-<button (click)="onAddPost()">Save</button>
-<hr>
-<p>{{ NewPost }}</p>
+<div class="container_2">
+
+    <div class="content_2">
+
+        <h1>Sub-header</h1>
+        <textarea cols="30" rows="10" [value]="NewPost" [(ngModel)]="PostInput" placeholder="Write your text here"></textarea>
+        
+        <button mat-flat-button class="full-width-button" color="primary" (click)="onAddPost()">Save</button>
+        
+        <p>{{ NewPost }}</p>
+        
+    </div>
+
+</div>
