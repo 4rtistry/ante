@@ -3,18 +3,18 @@
     <div class="content_2">
 
         <mat-card>
-           <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+            <form (submit)="onAddPost(postForm)" #postForm="ngForm">
                 <mat-form-field> 
-                    <input matInput type="text" name="title" ngModel required #title="ngModel" minlength="5" placeholder="Title">
+                    <input matInput type="text" name="title" [ngModel]="post?.title" required #title="ngModel" minlength="5" placeholder="Title">
                     <mat-error *ngIf="title.invalid">Enter a title</mat-error>
                 </mat-form-field>
                 <mat-form-field> 
-                    <textarea rows="6" matInput name="content" ngModel minlength="10" required #content="ngModel" placeholder="content"></textarea>
-
-                    <mat-error *ngIf="content.invalid">Enter a content</mat-error>
+                    <textarea rows="6" matInput name="content" [ngModel]="post?.content" minlength="10" required #content="ngModel" placeholder="Content"></textarea>
+                    <mat-error *ngIf="content.invalid">Enter content</mat-error>
                 </mat-form-field>
                 <button mat-raised-button color="primary" type="submit">Save</button>
-           </form>
+            </form>
+            
         </mat-card>
         
     </div>

@@ -15,6 +15,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,11 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     FormsModule,
+    RouterModule.forRoot([
+      { path: '', component: PostCreateComponent }, 
+      { path: 'edit/:postId', component: PostCreateComponent }
+    ]),
+    AppRoutingModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,

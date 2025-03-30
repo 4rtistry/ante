@@ -1,24 +1,86 @@
 const express = require('express');
-
 const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const Post = require('../backend/models/post');
+require('dotenv').config();
 
-app.use("/api/posts",(req, res, next) => {
-    const posts = 
-        [
-            {
-         id: "majomajomajomajo",
-         title: "first title from server-side",
-         content: "first content from server-side" },
-         {
-            id: "anteanteantante",
-            title: "second title from server-side",
-            content: "second content from server-side" }
-        ];
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-    res.status(200).json({
-        message: 'Post successfully!',
-        posts: posts
+const connectDb = async () => {
+  try{
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MondgoDB Successfull");
+  } catch (error){
+    console.error("Error connecting MongoDB ", error.message);
+  }
+}
+
+connectDb();
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+  );
+
+  // ✅ Handle preflight (OPTIONS) request properly
+  if (req.method === "OPTIONS") {
+    return res.status(200).json({});
+  }
+
+  next();
+});
+
+
+app.post("/api/posts",(req, res, next) => {
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content
+    });
+
+    post.save().then(result=>{
+      res.status(201).json({
+        message: 'Post added successfully',
+        postId: result._id
+      });
     });
 });
+
+app.put("/api/posts/:id", (req, res, next)=>{  
+  const post = new Post({  
+    _id: req.body.id,  
+    title: req.body.title,  
+    content: req.body.content  
+  });  
+  Post.updateOne({_id:req.params.id}, post).then(result =>{  
+    console.log(result);  
+    res.status(200).json({message: "Update Successful!"})  
+  });  
+}); 
+
+app.get("/api/posts", (req, res, next) => {
+   Post.find()
+    .then(documents => {
+      res.status(200).json({
+        message: 'Post successfully fetched',
+        posts: documents
+      })
+    });
+  });
+
+  app.delete("/api/posts/:id", (req, res, next) => {
+    Post.deleteOne({ _id: req.params.id }).then(result => {
+      console.log(result);
+      console.log(req.params.id);
+      res.status(200).json({ message: "Post deleted" });
+    })
+   });
 
 module.exports = app;
