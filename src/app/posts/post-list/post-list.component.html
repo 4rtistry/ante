@@ -1,7 +1,8 @@
 <div class="post-list">
     
     <mat-card>
-        <mat-accordion *ngIf="posts.length>=0">
+        <mat-spinner *ngIf = "Loading"></mat-spinner>  
+        <mat-accordion *ngIf="posts.length>=0 && !Loading">
             <mat-expansion-panel  *ngFor="let post of posts">
                 <mat-expansion-panel-header>
                     {{post.title}}

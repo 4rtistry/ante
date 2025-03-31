@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatCardModule,
     MatInputModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

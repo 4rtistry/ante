@@ -13,6 +13,7 @@ export class PostCreateComponent implements OnInit {
   public mode: string = 'create';  
   public postId: string | null = null; 
   public post: Post = { id: '', title: '', content: '' }; // ✅ Made public and initialized
+  public Loading = false;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
@@ -22,15 +23,14 @@ export class PostCreateComponent implements OnInit {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
 
-        if (this.postId) { // ✅ Ensure postId is a valid string before calling getPost
-          const fetchedPost = this.postsService.getPost(this.postId);
-          if (fetchedPost) {
-            this.post = {
-              id: fetchedPost.id,
-              title: fetchedPost.title || '', // Handle undefined case
-              content: fetchedPost.content || '' // Handle undefined case
-            };
-          }
+        this.Loading = true;
+
+        if (this.postId) { 
+          this.postsService.getPost(this.postId).subscribe(postData => {
+            this.Loading = false;
+            this.post = {id: postData._id, title:postData.title, content:postData.content}  
+          })
+          
         }
       } else {
         this.mode = 'create';
@@ -44,6 +44,8 @@ export class PostCreateComponent implements OnInit {
     if (form.invalid) {  
       return;  
     }  
+
+    this.Loading = true;
   
     if (this.mode === "create") {  
       this.postsService.addPost(form.value.title, form.value.content);  
