@@ -69,15 +69,30 @@ router.put("/:id",
       });
 });
 
-router.get("", (req, res, next) => {
-   Post.find()
-    .then(documents => {
-      res.status(200).json({
-        message: 'Post successfully fetched',
-        posts: documents
-      })
+router.get("", async (req, res, next) => {
+  const pageSize = +req.query.pagesize;  
+  const currentPage = +req.query.currentpage;
+  let fetchedPosts;
+
+  try {
+    const postQuery = Post.find();
+    
+    if (pageSize && currentPage) {  
+      postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+    }
+
+    fetchedPosts = await postQuery.exec();
+    const totalPosts = await Post.countDocuments();
+
+    res.status(200).json({
+      message: 'Posts successfully fetched',
+      posts: fetchedPosts,
+      totalPosts: totalPosts  // ✅ Send total posts count
     });
-  });
+  } catch (error) {
+    res.status(500).json({ message: "Fetching posts failed!" });
+  }
+});
 
   router.get("/:id", (req, res, next) => {
     Post.findById(req.params.id).then(post => {

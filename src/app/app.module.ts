@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import {ReactiveFormsModule} from '@angular/forms';
 
@@ -46,6 +47,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatInputModule,
     HttpClientModule,
     MatProgressSpinnerModule,
+    MatPaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
