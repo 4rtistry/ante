@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router'; 
 import { Post } from '../post.model';
+import {FormGroup} from "@angular/forms";  
+import { mimetype } from './mime-type.validator';
 
 @Component({
   selector: 'post-create',
@@ -11,53 +13,86 @@ import { Post } from '../post.model';
 })
 export class PostCreateComponent implements OnInit {
   public mode: string = 'create';  
-  public postId: string | null = null; 
-  public post: Post = { id: '', title: '', content: '' }; // ✅ Made public and initialized
+  public postId: any | null = null; 
+  public post: Post = { id: '', title: '', content: '', imagePath: '' }; // ✅ Made public and initialized
+  public Loading = false;
+  public form!: FormGroup;  
+  public Pickedimage!: string;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {}
 
   ngOnInit() {  
+    this.form = new FormGroup({  
+      'title': new FormControl(null, {validators:[Validators.required, Validators.minLength(3)]}),
+      'content': new FormControl(null, {validators: [Validators.required]}),
+      image: new FormControl(null, {  
+        validators:[Validators.required],  
+        asyncValidators: [mimetype]  
+})  
+
+    });  
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
 
-        if (this.postId) { // ✅ Ensure postId is a valid string before calling getPost
-          const fetchedPost = this.postsService.getPost(this.postId);
-          if (fetchedPost) {
-            this.post = {
-              id: fetchedPost.id,
-              title: fetchedPost.title || '', // Handle undefined case
-              content: fetchedPost.content || '' // Handle undefined case
-            };
-          }
+        this.Loading = true;
+
+        if (this.postId) { 
+          this.postsService.getPost(this.postId).subscribe(postData => {
+            this.Loading = false;
+            this.post = {id: postData._id, title:postData.title, content:postData.content, imagePath: postData.imagePath}  
+            this.form.setValue({  
+              title: this.post.title,  
+              content: this.post.content,
+              image: this.post.imagePath  
+            });  
+          })
+          
         }
       } else {
         this.mode = 'create';
         this.postId = null;
-        this.post = { id: '', title: '', content: '' }; // ✅ Reset post when in 'create' mode
+        this.post = { id: '', title: '', content: '', imagePath: '' }; // ✅ Reset post when in 'create' mode
       }
     });
   }  
 
-  onAddPost(form: NgForm) {  
-    if (form.invalid) {  
-      return;  
+  PickedImage(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) {
+      return;
+    }
+    const file = input.files[0];
+    this.form.patchValue({image: file});
+    this.form.get('image')?.updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.Pickedimage = reader.result as string;
+    }
+    reader.readAsDataURL(file);
+  } 
+
+  onAddPost(){  
+    if(this.form.invalid){  
+      return;
     }  
-  
-    if (this.mode === "create") {  
-      this.postsService.addPost(form.value.title, form.value.content);  
-    } else {  
-      if (this.postId) {  // Ensure postId is not null before calling updatePost
-        this.postsService.updatePost(
-          this.postId as string,  // Type assertion to enforce string type
-          form.value.title,  
-          form.value.content  
-        );  
-      }
+    this.Loading = true;
+    if(this.mode==="create"){  
+      this.postsService.addPost(
+        this.form.value.title,
+        this.form.value.content,
+        this.form.value.image
+      );  
+    }else{  
+      this.postsService.updatePost(  
+        this.postId,  
+        this.form.value.title,  
+        this.form.value.content,
+        this.form.value.image
+      );  
     }  
-  
-    form.resetForm();  
-  }
+    this.form.reset();  
+  }  
   
 }

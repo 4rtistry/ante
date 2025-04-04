@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Post = require('../backend/models/post');
 require('dotenv').config();
+const postRoutes = require('./routes/posts');
+const path = require("path");  
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -11,13 +13,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const connectDb = async () => {
   try{
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("MondgoDB Successfull");
+    console.log("MongoDB Successfull");
   } catch (error){
     console.error("Error connecting MongoDB ", error.message);
   }
 }
 
 connectDb();
+
+app.use("/images", express.static(path.join("backend/images")));  
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -30,6 +34,8 @@ app.use((req, res, next) => {
     "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
 
+  app.use("/api/posts",postRoutes);
+
   // ✅ Handle preflight (OPTIONS) request properly
   if (req.method === "OPTIONS") {
     return res.status(200).json({});
@@ -37,50 +43,5 @@ app.use((req, res, next) => {
 
   next();
 });
-
-
-app.post("/api/posts",(req, res, next) => {
-    const post = new Post({
-      title: req.body.title,
-      content: req.body.content
-    });
-
-    post.save().then(result=>{
-      res.status(201).json({
-        message: 'Post added successfully',
-        postId: result._id
-      });
-    });
-});
-
-app.put("/api/posts/:id", (req, res, next)=>{  
-  const post = new Post({  
-    _id: req.body.id,  
-    title: req.body.title,  
-    content: req.body.content  
-  });  
-  Post.updateOne({_id:req.params.id}, post).then(result =>{  
-    console.log(result);  
-    res.status(200).json({message: "Update Successful!"})  
-  });  
-}); 
-
-app.get("/api/posts", (req, res, next) => {
-   Post.find()
-    .then(documents => {
-      res.status(200).json({
-        message: 'Post successfully fetched',
-        posts: documents
-      })
-    });
-  });
-
-  app.delete("/api/posts/:id", (req, res, next) => {
-    Post.deleteOne({ _id: req.params.id }).then(result => {
-      console.log(result);
-      console.log(req.params.id);
-      res.status(200).json({ message: "Post deleted" });
-    })
-   });
 
 module.exports = app;

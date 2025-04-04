@@ -1,11 +1,17 @@
 <div class="post-list">
     
     <mat-card>
-        <mat-accordion *ngIf="posts.length>=0">
+        <mat-spinner *ngIf = "Loading"></mat-spinner>  
+        <mat-accordion *ngIf="posts.length>=0 && !Loading">
             <mat-expansion-panel  *ngFor="let post of posts">
                 <mat-expansion-panel-header>
                     {{post.title}}
                 </mat-expansion-panel-header>
+
+                <div class= "post-image">  
+                    <img [src]="post.imagePath" [alt]= "post.title">  
+                  </div>  
+
                 <p>{{post.content}}</p>
                 <mat-action-row>
                     <a mat-button color="primary" [routerLink] = "['/edit',post.id]">EDIT</a>  
