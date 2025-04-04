@@ -19,6 +19,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
 
+import {ReactiveFormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent, 
@@ -34,6 +36,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       { path: 'edit/:postId', component: PostCreateComponent }
     ]),
     AppRoutingModule,
+    ReactiveFormsModule,  
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
