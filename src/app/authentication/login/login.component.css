@@ -1,0 +1,29 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  mat-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  span{
+    color: #000;
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 30px;
+  }

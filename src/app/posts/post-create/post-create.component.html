@@ -10,6 +10,13 @@
                     <mat-error *ngIf= "form.get('title')?.invalid">This field is required</mat-error>  
                 </mat-form-field>
 
+        
+
+                <mat-form-field> 
+                    <textarea rows="6" matInput formControlName = "content" placeholder="Content"></textarea>
+                    <mat-error *ngIf= "form.get('content')?.invalid">This field is required</mat-error>  
+                </mat-form-field>
+
                 <div>  
                     <button mat-stroked-button type="button"(click)="filepicker.click()">  
                       Pick Image  
@@ -21,12 +28,9 @@
                     <img [src]= "Pickedimage" [alt]= "form.value.title">
                 </div>
             
-
-                <mat-form-field> 
-                    <textarea rows="6" matInput formControlName = "content" placeholder="Content"></textarea>
-                    <mat-error *ngIf= "form.get('content')?.invalid">This field is required</mat-error>  
-                </mat-form-field>
                 <button mat-raised-button color="primary" type="submit">Save</button>
+
+                
             </form>
             
         </mat-card>

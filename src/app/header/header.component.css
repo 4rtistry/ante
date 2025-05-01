@@ -6,3 +6,46 @@
     color: white;
     text-decoration: none;
 }
+
+mat-toolbar{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    padding-right: 2%;
+}
+
+.container-one ul{
+    padding: 0;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.container-one ul li{
+    list-style: none;
+}
+
+.container-one ul li span{
+    font-size: 12px;
+}
+
+.container-two ul{
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+}
+
+.container-two ul li{
+    list-style: none;
+}
+
+.container-one .logo{
+    transition: 0.3s;
+}
+
+.container-one .logo:hover{
+    color: aquamarine;
+
+}

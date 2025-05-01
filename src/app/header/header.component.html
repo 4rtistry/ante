@@ -1,16 +1,36 @@
 <div class="app-header">
 
     <mat-toolbar color= "primary">   
-        <span>  
-          <a routerLink = "/">  
-            View
-          </a>  
-        </span>  
-        <ul>  
-          <li>  
-            <a routerLink = "/create"> Create</a>  
+
+        <div class="container-one"> 
+          <ul>
+            <li>
+              <a routerLink = "/">  
+                  Application
+              </a> 
+            </li>
+
+            <li *ngIf = "userIsAuthenticated">        
+              <a mat-button routerLink = "/create" routerLinkActive = "mat-accent">Create</a>  
+            </li> 
+          </ul>
+      </div>
+    
+       
+       <div class="container-two">
+        <ul>   
+          <li *ngIf = "!userIsAuthenticated">  
+            <a mat-button routerLink = "login" routerLinkActive = "mat-accent">Login</a>  
+          </li>  
+          <li *ngIf = "!userIsAuthenticated">  
+            <a mat-button routerLink = "signup" routerLinkActive = "mat-accent">Signup</a>  
+          </li>  
+          <li *ngIf = "userIsAuthenticated">  
+            <button mat-button (click)= "onLogout()">Logout</button>    
           </li>  
         </ul>  
+
+       </div>
       </mat-toolbar> 
 
 </div>
