@@ -1,0 +1,52 @@
+<div class="auth-container">
+  <mat-card>
+    <span>Create your account</span>
+    <p>Be part of something fresh.</p>
+
+    <!-- Show spinner while loading -->
+    <mat-spinner *ngIf="Loading"></mat-spinner>
+
+    <!-- Signup Form -->
+    <form (ngSubmit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!Loading">
+
+      <!-- Email -->
+      <label class="field-label" for="emailInput">Email</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <input
+          matInput
+          id="emailInput"
+          type="email"
+          name="email"
+          ngModel
+          required
+          email
+          #emailModel="ngModel">
+        <mat-error *ngIf="signupForm.submitted && emailModel.invalid">
+          Valid email is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <label class="field-label" for="passwordInput">Password</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <input
+          matInput
+          id="passwordInput"
+          type="password"
+          name="password"
+          ngModel
+          required
+          #passwordModel="ngModel">
+        <mat-error *ngIf="signupForm.submitted && passwordModel.invalid">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Submit Button -->
+      <button type="submit">
+        Register
+      </button>
+      <mat-spinner *ngIf="Loading" diameter="30"></mat-spinner>
+    </form>
+  </mat-card>
+</div>

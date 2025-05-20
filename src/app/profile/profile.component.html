@@ -1,0 +1,55 @@
+<div class="container_2">
+  <div class="content_2">
+    <mat-card>
+      <span>Change Your Password</span>
+      <p>Update your credentials securely.</p>
+
+      <!-- Password Change Form -->
+      <form #passwordForm="ngForm" (ngSubmit)="onChangePassword(passwordForm)">
+        
+        <!-- Current Password -->
+         <label class="field-label" for="currentPassword">Your Current Password</label>
+        <mat-form-field appearance="fill" class="full-width">
+          <input
+            matInput
+            id="currentPassword"
+            type="password"
+            name="currentPassword"
+            ngModel
+            required
+          />
+           <mat-error *ngIf="passwordForm.submitted && passwordForm.controls['currentPassword']?.invalid">
+            Current password is required.
+            </mat-error>
+         
+        </mat-form-field>
+
+        <!-- New Password -->
+         <label class="field-label" for="newPassword">Your New Password</label>
+        <mat-form-field appearance="fill" class="full-width">
+          <input
+            matInput
+            id="newPassword"
+            type="password"
+            name="newPassword"
+            ngModel
+            required
+          />
+         <mat-error *ngIf="passwordForm.submitted && passwordForm.controls['newPassword']?.errors?.['required']">
+        New password is required.
+        </mat-error>
+        
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <button class="save-btn"type="submit">
+          Update Password
+        </button>
+
+        <!-- Success and Error Messages -->
+        <p *ngIf="message" style="color: green; margin-top: 10px; text-align: center;">{{ message }}</p>
+        <p *ngIf="error" style="color: red; margin-top: 10px; text-align: center;">{{ error }}</p>
+      </form>
+    </mat-card>
+  </div>
+</div>

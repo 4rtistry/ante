@@ -3,18 +3,52 @@
     <div class="content_2">
 
         <mat-card>
-           <form (submit)="onAddPost(postForm)" #postForm="ngForm">
-                <mat-form-field> 
-                    <input matInput type="text" name="title" ngModel required #title="ngModel" minlength="5" placeholder="Title">
-                    <mat-error *ngIf="title.invalid">Enter a title</mat-error>
-                </mat-form-field>
-                <mat-form-field> 
-                    <textarea rows="6" matInput name="content" ngModel minlength="10" required #content="ngModel" placeholder="content"></textarea>
 
-                    <mat-error *ngIf="content.invalid">Enter a content</mat-error>
+        <span>Write a post</span>
+        <p>Share your latest ideas with everyone.</p>
+
+            <mat-spinner *ngIf = "Loading"></mat-spinner>  
+            <form [formGroup]= "form" (submit) = "onAddPost()"  *ngIf = "!Loading">  
+
+                <label class="field-label" for="titleInput">Title</label>
+                <mat-form-field appearance="fill" class="full-width">
+                <input
+                    matInput
+                    id="titleInput"
+                    type="text"
+                    formControlName="title"
+                />
+                <mat-error *ngIf="form.get('title')?.invalid">This field is required</mat-error>
                 </mat-form-field>
-                <button mat-raised-button color="primary" type="submit">Save</button>
-           </form>
+
+                <label class="field-label" for="contentInput">Content</label>
+                <mat-form-field appearance="fill" class="full-width">
+                <textarea
+                    matInput
+                    id="contentInput"
+                    rows="6"
+                    formControlName="content"
+                    placeholder="Write your content">
+                </textarea>
+                <mat-error *ngIf="form.get('content')?.invalid">This field is required</mat-error>
+                </mat-form-field>
+
+                <div>  
+                    <button class="preview-btn" type="button"(click)="filepicker.click()">  
+                      Pick Image  
+                    </button>  
+                    <input type="file" #filepicker (change) = "PickedImage($event)">  
+                  </div>  
+
+                  <div class="image-preview" *ngIf="Pickedimage !== '' && Pickedimage && form.get('image')?.valid">
+                    <img [src]= "Pickedimage" [alt]= "form.value.title">
+                </div>
+            
+                <button class="save-btn" type="submit">Save</button>
+
+                
+            </form>
+            
         </mat-card>
         
     </div>

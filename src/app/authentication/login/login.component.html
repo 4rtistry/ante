@@ -1,0 +1,50 @@
+<div class="auth-container">
+    <mat-card>
+    <span>Login your account</span>
+    <p>Your market access starts here.</p>
+    
+      <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
+
+        <!-- Email -->
+      <label class="field-label" for="emailInput">Email</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <input
+          matInput
+          id="emailInput"
+          type="email"
+          name="email"
+          ngModel
+          required
+          email
+          #emailModel="ngModel">
+        <mat-error *ngIf="loginForm.submitted && emailModel.invalid">
+          Valid email is required
+        </mat-error>
+      </mat-form-field>
+  
+        <!-- Password -->
+      <label class="field-label" for="passwordInput">Password</label>
+      <mat-form-field appearance="fill" class="full-width">
+        <input
+          matInput
+          id="passwordInput"
+          type="password"
+          name="password"
+          ngModel
+          required
+          #passwordModel="ngModel">
+        <mat-error *ngIf="loginForm.submitted && passwordModel.invalid">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+  
+       <!-- Submit Button -->
+      <button type="submit">
+        Login
+      </button>
+        <mat-spinner *ngIf="Loading" diameter="30"></mat-spinner>
+      </form>
+
+    </mat-card>
+  </div>
+    

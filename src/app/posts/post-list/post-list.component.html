@@ -1,20 +1,47 @@
-<div class="post-list">
-    
-    <mat-card>
-        <mat-accordion *ngIf="posts.length>=0">
-            <mat-expansion-panel  *ngFor="let post of posts">
-                <mat-expansion-panel-header>
-                    {{post.title}}
-                </mat-expansion-panel-header>
-                <p>{{post.content}}</p>
-                <mat-action-row>
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </mat-action-row>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <p *ngIf="posts.length<=0">No post addded yet</p>
+<div class="search-bar">
+  <mat-form-field appearance="outline" class="search-input">
+    <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by title" />
+  </mat-form-field>
+</div>
 
-    </mat-card>
+<div class="paginator">
+<mat-paginator
+ class="pagination"
+      [length]="totalposts"
+      [pageSize]="postperpage"
+      [pageSizeOptions]="pageSizeOption"
+      (page)="onChangedPage($event)">
+</mat-paginator>
 
 </div>
+
+<div class="post-list">
+   
+    <mat-card>
+      <mat-spinner *ngIf="Loading"></mat-spinner>  
+  
+      <mat-accordion *ngIf="posts.length > 0 && !Loading">
+        <mat-expansion-panel *ngFor="let post of filteredPosts">
+          <mat-expansion-panel-header>
+            {{ post.title }}
+          </mat-expansion-panel-header>
+  
+          <div class="post-image">  
+            <img [src]="post.imagePath" [alt]="post.title">  
+          </div>  
+  
+          <p>{{ post.content }}</p>
+  
+          <mat-action-row *ngIf= "userIsAuthenticated && userId === post.creator">  
+            <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>  
+            <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
+          </mat-action-row>
+  
+        </mat-expansion-panel>
+      </mat-accordion>
+  
+      <p *ngIf="posts.length === 0 && !Loading">No posts added yet</p>  
+    </mat-card>
+  
+  </div>
+  

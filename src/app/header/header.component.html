@@ -1,6 +1,47 @@
 <div class="app-header">
+  <mat-toolbar>
 
-<mat-toolbar color="primary">
-    <span>Custom Toolbar</span>
-</mat-toolbar>
+    <!-- Logo Section -->
+    <div class="container-one">
+      <ul>
+        <li>
+          <a routerLink="/">
+            <img src="assets/logo.png" alt="App logo" class="logo-img" />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Hamburger Icon -->
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle menu">
+      <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div class="container-two" [class.open]="menuOpen || !isMobile">
+      <ul>
+        <li *ngIf="userIsAuthenticated" class="profile">
+          <mat-icon>person</mat-icon>
+          <a class="text" routerLink="profile">{{ userEmail }}</a>
+        </li>
+
+        <li *ngIf="!userIsAuthenticated">
+          <a class="text" routerLink="login">Login</a>
+        </li>
+
+        <li *ngIf="!userIsAuthenticated">
+          <a class="text" routerLink="signup">Register</a>
+        </li>
+
+        <li *ngIf="userIsAuthenticated">
+          <a routerLink="/create">Create a Post</a>
+        </li>
+
+        <li *ngIf="userIsAuthenticated">
+          <button (click)="onLogout()">Logout</button>
+        </li>
+      </ul>
+    </div>
+
+  </mat-toolbar>
 </div>
