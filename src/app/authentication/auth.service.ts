@@ -14,7 +14,7 @@ export class AuthService {
   private tokenTimer: any;
 
   private userId: string = '';
-  private userEmail: string = ''; // NEW
+  private userEmail: string = ''; 
 
   private authLoading = new Subject<boolean>();
   authLoading$ = this.authLoading.asObservable();
@@ -41,7 +41,7 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
-  /** ─────────────────────────  Sign-up  ─────────────────────────── */
+  /* Sign up */
   CreateUser(email: string, password: string): void {
     const authData: AuthData = { email, password };
     this.authLoading.next(true);
@@ -57,7 +57,7 @@ export class AuthService {
       });
   }
 
-  /** ─────────────────────────  Log-in  ─────────────────────────── */
+  /* Login */
   loginUser(email: string, password: string): void {
     const authData: AuthData = { email, password };
     this.authLoading.next(true);
@@ -76,7 +76,7 @@ export class AuthService {
 
           const expiresInDuration = response.expiresIn;
           this.userId = response.userId;
-          this.userEmail = email; // ✅ Save email
+          this.userEmail = email; 
 
           this.setAuthTimer(expiresInDuration);
           this.isAuthenticated = true;
@@ -85,14 +85,14 @@ export class AuthService {
           const expirationDate = new Date(
             new Date().getTime() + expiresInDuration * 1000
           );
-          this.saveAuthData(this.token, expirationDate, this.userId, this.userEmail); // ✅
+          this.saveAuthData(this.token, expirationDate, this.userId, this.userEmail); 
           this.router.navigate(['/']);
         },
         error: () => this.authLoading.next(false)
       });
   }
 
-  /** ─────────────────────────  Log-out  ─────────────────────────── */
+  /* Logout */
   logout(): void {
     this.token = '';
     this.userId = '';
@@ -105,7 +105,7 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  /** ──────────────────────── Auto-auth on refresh ──────────────────────── */
+  /* Auth Refresh */
   autoAuthUser(): void {
     const authInfo = this.getAuthData();
     if (!authInfo) {
@@ -138,7 +138,7 @@ export class AuthService {
   );
 }
 
-  /** ────────────────────── LocalStorage Handling ────────────────────── */
+  /* Local Storage Handling */
   private saveAuthData(
     token: string,
     expirationDate: Date,
@@ -148,14 +148,14 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
-    localStorage.setItem('email', email); // ✅
+    localStorage.setItem('email', email); 
   }
 
   private clearAuthData(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
     localStorage.removeItem('userId');
-    localStorage.removeItem('email'); // ✅
+    localStorage.removeItem('email'); 
   }
 
   private getAuthData():
@@ -164,7 +164,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const expiration = localStorage.getItem('expiration');
     const userId = localStorage.getItem('userId');
-    const email = localStorage.getItem('email'); // ✅
+    const email = localStorage.getItem('email'); 
 
     if (!token || !expiration || !userId || !email) {
       return;

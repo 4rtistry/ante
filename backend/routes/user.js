@@ -1,19 +1,19 @@
 const express = require('express');
 const bcrypt = require("bcrypt"); 
 const router = express.Router();
-const User = require("../models/user"); // Capitalized for convention
+const User = require("../models/user"); 
 const jwt = require("jsonwebtoken"); 
 const checkAuth = require("../middleware/check-auth");
 
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      const NewUser = new User({   // ✅ Create an instance of the model
+      const NewUser = new User({   
         email: req.body.email,
         password: hash
       });
 
-      return NewUser.save();       // ✅ Save the user instance
+      return NewUser.save();       
     })
     .then(result => {
       res.status(201).json({
@@ -22,7 +22,7 @@ router.post("/signup", (req, res, next) => {
       });
     })
     .catch(err => {
-      console.error("Signup error:", err); // ✅ Log the error
+      console.error("Signup error:", err);
       res.status(500).json({
         message: "Invalid Authentication Credentials!"  
       });
@@ -51,7 +51,7 @@ router.post("/login", (req, res, next) => {
             res.status(200).json({
               token: token,
               expiresIn: 3600,
-              userId: foundUser._id     // ✅ corrected
+              userId: foundUser._id     
             });
           });
       })

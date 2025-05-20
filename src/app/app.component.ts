@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './authentication/auth.service';
 
-// interface Post {
-//   id: number;
-//   title: string;
-//   content: string;
-// }
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

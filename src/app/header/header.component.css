@@ -90,7 +90,6 @@ mat-toolbar{
     background-color: #F69C82;
 }
 
-/* Mobile hamburger and dropdown styles */
 @media (max-width: 480px) {
   .hamburger {
     display: block;
