@@ -72,15 +72,11 @@ router.put("/:id", checkAuth,
       });  
       
      Post.updateOne(
-  { _id: req.params.id, creator: req.userData.userId }, // match by id *and* owner
-  post                                                   // fields to update
+  { _id: req.params.id, creator: req.userData.userId }, 
+  post                                                   
 )
   .then(result => {
-    /*
-      result.nModified (≤ Mongoose 5) or
-      result.modifiedCount (Mongoose 6+) tells us if anything changed.
-      If it’s 0, either the post wasn’t found or the user isn’t the creator.
-    */
+  
     const modified = result.nModified ?? result.modifiedCount ?? 0;
 
     if (modified > 0) {
@@ -89,7 +85,6 @@ router.put("/:id", checkAuth,
         .json({ message: 'Update successful!' });
     }
 
-    // Matched nothing → likely “not your post”
     res.status(401).json({ message: 'Not authorized!' });
   })
   .catch(error =>{  
@@ -117,7 +112,7 @@ router.get("", async (req, res, next) => {
     res.status(200).json({
       message: 'Posts successfully fetched',
       posts: fetchedPosts,
-      totalPosts: totalPosts  // ✅ Send total posts count
+      totalPosts: totalPosts  
     });
   } catch (error) {
     res.status(500).json({ message: "Fetching posts failed!" });
@@ -140,10 +135,10 @@ router.get("", async (req, res, next) => {
 
   router.delete("/:id",   checkAuth,   (req, res, next) => {
     Post.deleteOne(
-  { _id: req.params.id, creator: req.userData.userId }   // ► match id *and* owner
+  { _id: req.params.id, creator: req.userData.userId }   
 )
   .then(result => {
-    // For Mongoose 5 use result.n; for Mongoose 6+ use result.deletedCount
+ 
     const deleted = result.deletedCount ?? result.n ?? 0;
 
     console.log(result);
@@ -153,7 +148,6 @@ router.get("", async (req, res, next) => {
       return res.status(200).json({ message: 'Delete successful!' });
     }
 
-    // Nothing matched → user tried to delete a post they don’t own
     res.status(401).json({ message: 'Not authorized!' });
   })
  .catch(error =>{  

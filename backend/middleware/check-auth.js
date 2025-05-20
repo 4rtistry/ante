@@ -5,7 +5,7 @@ module.exports = (req, res, next)=>{
         .split(" ")[1];  
         const decodedToken = jwt.verify(
      token,
-     "A_very_long_string_for_our_secret"      // <- SAME string you used in login
+     "A_very_long_string_for_our_secret"      
    );
    req.userData = { email: decodedToken.email, userId: decodedToken.userId };
         next();  

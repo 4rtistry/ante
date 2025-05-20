@@ -11,7 +11,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; totalPosts: number }>();
 
-  constructor(private http: HttpClient, private router: Router,  private authService: AuthService) {} // ✅ Inject Router
+  constructor(private http: HttpClient, private router: Router,  private authService: AuthService) {} 
 
   getPosts(pageSize: number, currentPage: number) {
     const queryParams = `?pagesize=${pageSize}&currentpage=${currentPage}`;
@@ -52,7 +52,7 @@ export class PostsService {
     title: string;
     content: string;
     imagePath: string;
-    creator: string;          // ← add this line
+    creator: string;          
   }>('http://localhost:3000/api/posts/' + id);
 }
 
@@ -118,7 +118,7 @@ updatePost( id: string, title:string, content:string, image: File | string){
       console.log('Deleted');
       this.posts = this.posts.filter((post) => post.id !== postId);
       this.postsUpdated.next({ posts: [...this.posts], totalPosts: this.posts.length });
-      this.router.navigate(['/']); // ✅ Navigate to home after deleting a post
+      this.router.navigate(['/']); 
     });
   }
 }

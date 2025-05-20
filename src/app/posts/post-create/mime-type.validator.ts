@@ -31,7 +31,7 @@ export const mimetype = (control: AbstractControl): Promise<{[key: string]: any}
                   isValid = true;  
                   break;  
                 default:  
-                  isValid = false; // Or you can use the blob.type as fallback  
+                  isValid = false; 
                   break  
               }  
               if(isValid) {
