@@ -1,23 +1,22 @@
-.auth-container {
+.container_2{
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
-  }
-  
-  mat-card {
+}
+
+.content_2 button{
     width: 100%;
-    max-width: 400px;
+}
+
+mat-card{
+   width: 100%;
+    max-width: 600px;
     padding: 2rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-  }
+}
 
-  mat-form-field {
-    width: 100%;
-  }
-
-  mat-card span{
+mat-card span{
     font-weight: 500;
     color: #000;
     font-size: 24px;
@@ -30,15 +29,19 @@
     margin-bottom: 20px;
   }
 
- .field-label {
+ mat-form-field{
+    width: 100%;
+  }
+
+   .field-label {
   color: #000;      
-  display: block;
   font-weight: 500;
   font-size: 14px;
   margin-bottom: 5px;
+  display: block;
 }
 
-  button {
+.save-btn{
     width: 100%;
     border: none;
     padding: 16px 0;
@@ -51,10 +54,6 @@
     margin-top: 10px;
   }
 
-  button:hover{
+  .save-btn:hover{
     background-color: #F69C82;
   }
-
- 
-
-

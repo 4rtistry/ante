@@ -7,7 +7,7 @@
 .main_container{
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(to right top, #12100E, #2B4162);
+    background-image: linear-gradient(to bottom, #f16b44, #f37854, #f58463, #f69073, #f69c82);
     color: #fff;
     overflow: hidden;
 }

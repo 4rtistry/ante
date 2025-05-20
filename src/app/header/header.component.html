@@ -1,36 +1,47 @@
 <div class="app-header">
+  <mat-toolbar>
 
-    <mat-toolbar color= "primary">   
+    <!-- Logo Section -->
+    <div class="container-one">
+      <ul>
+        <li>
+          <a routerLink="/">
+            <img src="assets/logo.png" alt="App logo" class="logo-img" />
+          </a>
+        </li>
+      </ul>
+    </div>
 
-        <div class="container-one"> 
-          <ul>
-            <li>
-              <a routerLink = "/">  
-                  Application
-              </a> 
-            </li>
+    <!-- Hamburger Icon -->
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle menu">
+      <mat-icon>{{ menuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
 
-            <li *ngIf = "userIsAuthenticated">        
-              <a mat-button routerLink = "/create" routerLinkActive = "mat-accent">Create</a>  
-            </li> 
-          </ul>
-      </div>
-    
-       
-       <div class="container-two">
-        <ul>   
-          <li *ngIf = "!userIsAuthenticated">  
-            <a mat-button routerLink = "login" routerLinkActive = "mat-accent">Login</a>  
-          </li>  
-          <li *ngIf = "!userIsAuthenticated">  
-            <a mat-button routerLink = "signup" routerLinkActive = "mat-accent">Signup</a>  
-          </li>  
-          <li *ngIf = "userIsAuthenticated">  
-            <button mat-button (click)= "onLogout()">Logout</button>    
-          </li>  
-        </ul>  
+    <!-- Dropdown Menu -->
+    <div class="container-two" [class.open]="menuOpen || !isMobile">
+      <ul>
+        <li *ngIf="userIsAuthenticated" class="profile">
+          <mat-icon>person</mat-icon>
+          <a class="text" routerLink="profile">{{ userEmail }}</a>
+        </li>
 
-       </div>
-      </mat-toolbar> 
+        <li *ngIf="!userIsAuthenticated">
+          <a class="text" routerLink="login">Login</a>
+        </li>
 
+        <li *ngIf="!userIsAuthenticated">
+          <a class="text" routerLink="signup">Register</a>
+        </li>
+
+        <li *ngIf="userIsAuthenticated">
+          <a routerLink="/create">Create a Post</a>
+        </li>
+
+        <li *ngIf="userIsAuthenticated">
+          <button (click)="onLogout()">Logout</button>
+        </li>
+      </ul>
+    </div>
+
+  </mat-toolbar>
 </div>

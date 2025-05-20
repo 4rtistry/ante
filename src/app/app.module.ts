@@ -25,6 +25,11 @@ import { LoginComponent } from './authentication/login/login.component';
 import { SignupComponent } from './authentication/signup/signup.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './authentication/auth-interceptor';
+import { ErrorInterceptor } from './error-interceptor';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ErrorComponent } from './error/error.component';
+import { MatIconModule } from '@angular/material/icon';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -34,7 +39,9 @@ import { AuthInterceptor } from './authentication/auth-interceptor';
     HeaderComponent,
     PostListComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ErrorComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -55,9 +62,11 @@ import { AuthInterceptor } from './authentication/auth-interceptor';
     HttpClientModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatDialogModule,
+    MatIconModule,
   ],
-  providers: [{provide: HTTP_INTERCEPTORS,   
-    useClass:AuthInterceptor, multi: true}],  
-  bootstrap: [AppComponent]
+  providers: [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor,  multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }  ],  
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -14,7 +14,7 @@ import { mimetype } from './mime-type.validator';
 export class PostCreateComponent implements OnInit {
   public mode: string = 'create';  
   public postId: any | null = null; 
-  public post: Post = { id: '', title: '', content: '', imagePath: '' }; // ✅ Made public and initialized
+  public post: Post = { id: '', title: '', content: '', imagePath: '', creator: '' }; // ✅ Made public and initialized
   public Loading = false;
   public form!: FormGroup;  
   public Pickedimage!: string;
@@ -41,7 +41,13 @@ export class PostCreateComponent implements OnInit {
         if (this.postId) { 
           this.postsService.getPost(this.postId).subscribe(postData => {
             this.Loading = false;
-            this.post = {id: postData._id, title:postData.title, content:postData.content, imagePath: postData.imagePath}  
+           this.post = {
+              id: postData._id,
+              title: postData.title,
+              content: postData.content,
+              imagePath: postData.imagePath,
+              creator: postData.creator        // ← add
+            };
             this.form.setValue({  
               title: this.post.title,  
               content: this.post.content,
@@ -53,7 +59,7 @@ export class PostCreateComponent implements OnInit {
       } else {
         this.mode = 'create';
         this.postId = null;
-        this.post = { id: '', title: '', content: '', imagePath: '' }; // ✅ Reset post when in 'create' mode
+        this.post = { id: '', title: '', content: '', imagePath: '', creator: '' }; // ✅ Reset post when in 'create' mode
       }
     });
   }  

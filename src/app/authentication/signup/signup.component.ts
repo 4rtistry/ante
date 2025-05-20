@@ -1,22 +1,40 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { Component, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent {
+export class SignupComponent implements OnDestroy {
+
+  /** bound to the template to show / hide the spinner */
   Loading = false;
 
-  constructor(public authService: AuthService){}  
+  /** keeps the subscription so we can unsubscribe */
+  private loadingSub!: Subscription;
 
-  onSignup(form: NgForm){  
-    if(form.invalid){  
-      return;  
-    }  
-    this.Loading = true;
-    this.authService.CreateUser(form.value.email, form.value.password);  
-  }  
+  constructor(private authService: AuthService) {
+    /* listen once – whenever the service emits, update the flag */
+    this.loadingSub = this.authService.authLoading$
+      .subscribe(isLoading => (this.Loading = isLoading));
+  }
+
+  /** template → (ngSubmit)="onSignup(f)" */
+  onSignup(form: NgForm): void {
+    if (form.invalid) {
+      return;
+    }
+
+    /* The service will emit Loading=true/false for us */
+    this.authService.CreateUser(form.value.email, form.value.password);
+  }
+
+  /* prevent memory-leaks */
+  ngOnDestroy(): void {
+    this.loadingSub.unsubscribe();
+  }
 }

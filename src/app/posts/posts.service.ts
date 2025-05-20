@@ -4,13 +4,14 @@ import { Post } from './post.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService } from '../authentication/auth.service'; 
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; totalPosts: number }>();
 
-  constructor(private http: HttpClient, private router: Router) {} // ✅ Inject Router
+  constructor(private http: HttpClient, private router: Router,  private authService: AuthService) {} // ✅ Inject Router
 
   getPosts(pageSize: number, currentPage: number) {
     const queryParams = `?pagesize=${pageSize}&currentpage=${currentPage}`;
@@ -24,13 +25,15 @@ export class PostsService {
               title: post.title,
               content: post.content,
               id: post._id,
-              imagePath: post.imagePath
+              imagePath: post.imagePath,
+              creator: post.creator  
             })),
             totalPosts: postData.totalPosts
           };
         })
       )
       .subscribe((transformedPostData) => {
+        console.log(transformedPostData);  
         this.posts = transformedPostData.posts;
         this.postsUpdated.next({
           posts: [...this.posts],
@@ -43,9 +46,15 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  getPost(id: string) {  
-    return this.http.get<{_id: string, title: string, content:string, imagePath: string}>("http://localhost:3000/api/posts/"+id);     
-}  
+  getPost(id: string) {
+  return this.http.get<{
+    _id: string;
+    title: string;
+    content: string;
+    imagePath: string;
+    creator: string;          // ← add this line
+  }>('http://localhost:3000/api/posts/' + id);
+}
 
   addPost(title: string, content: string, image: File) {
     const postData = new FormData();
@@ -60,7 +69,8 @@ export class PostsService {
             id: responseData.post.id,
             title: title,
             content: content,
-            imagePath: responseData.post.imagePath
+            imagePath: responseData.post.imagePath,
+            creator: responseData.post.creator 
           };
         this.posts.push(post);
         this.postsUpdated.next({ posts: [...this.posts], totalPosts: this.posts.length });
@@ -81,7 +91,8 @@ updatePost( id: string, title:string, content:string, image: File | string){
            id:id,
            title:title,
            content:content,
-           imagePath: image
+           imagePath: image,
+           creator: this.authService.getUserId() 
        };  
    }
    this.http.put<{ message: string; imagePath: string }>("http://localhost:3000/api/posts/"+id,postData)
@@ -92,7 +103,8 @@ updatePost( id: string, title:string, content:string, image: File | string){
            id: id,  
            title: title,    
            content: content,  
-           imagePath: response.imagePath
+           imagePath: response.imagePath,
+           creator: this.authService.getUserId()
          }  
        updatedPosts[oldPostIndex] = post;  
        this.posts = updatedPosts;  

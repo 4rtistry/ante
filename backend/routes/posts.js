@@ -28,24 +28,31 @@ const storage = multer.diskStorage({
   }
 });  
 
-router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res, next) => {
+router.post("", checkAuth, multer({ storage: storage }).single("image"), async (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
 
   const post = new Post({
-      title: req.body.title,
-      content: req.body.content,
-      imagePath: url + "/images/" + req.file.filename
-  })
-  post.save().then(result => {
-      res.status(201).json({
-          message: 'Post added successfully',
-          post: {
-              ...result,
-              id: result._id
-          }
-      })
-  })
-})
+    title: req.body.title,
+    content: req.body.content,
+    imagePath: url + "/images/" + req.file.filename,
+    creator: req.userData.userId
+  });
+
+  try {
+    const result = await post.save();
+    res.status(201).json({
+      message: 'Post added successfully',
+      post: {
+        ...result._doc,
+        id: result._id
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Creating a post failed!"
+    });
+  }
+});
 
 router.put("/:id", checkAuth,  
   multer({ storage: storage }).single("image"),
@@ -60,14 +67,36 @@ router.put("/:id", checkAuth,
           _id: req.body.id,  
           title: req.body.title,  
           content: req.body.content,
-          imagePath: imagePath
+          imagePath: imagePath,
+          creator: req.userData.userId  
       });  
-      Post.updateOne({_id: req.params.id}, post).then(result => { 
-          console.log(result);  
-          res.status(200).json({ message: "Update Successful!" });  
-      }).catch(error => {
-          res.status(500).json({ message: "Update failed!", error });
-      });
+      
+     Post.updateOne(
+  { _id: req.params.id, creator: req.userData.userId }, // match by id *and* owner
+  post                                                   // fields to update
+)
+  .then(result => {
+    /*
+      result.nModified (≤ Mongoose 5) or
+      result.modifiedCount (Mongoose 6+) tells us if anything changed.
+      If it’s 0, either the post wasn’t found or the user isn’t the creator.
+    */
+    const modified = result.nModified ?? result.modifiedCount ?? 0;
+
+    if (modified > 0) {
+      return res
+        .status(200)
+        .json({ message: 'Update successful!' });
+    }
+
+    // Matched nothing → likely “not your post”
+    res.status(401).json({ message: 'Not authorized!' });
+  })
+  .catch(error =>{  
+      res.status(500).json({  
+        message: "Couldn't Update Post"  
+      });  
+    });  
 });
 
 router.get("", async (req, res, next) => {
@@ -102,15 +131,36 @@ router.get("", async (req, res, next) => {
       } else {
         res.status(484).json({message: 'Post not found!'});
       }
-    })
+    }).catch(error =>{  
+      res.status(500).json({  
+        message: "Fetching Posts Failed!"  
+      });  
+    });  
   });
 
   router.delete("/:id",   checkAuth,   (req, res, next) => {
-    Post.deleteOne({ _id: req.params.id }).then(result => {
-      console.log(result);
-      console.log(req.params.id);
-      res.status(200).json({ message: "Post deleted" });
-    })
+    Post.deleteOne(
+  { _id: req.params.id, creator: req.userData.userId }   // ► match id *and* owner
+)
+  .then(result => {
+    // For Mongoose 5 use result.n; for Mongoose 6+ use result.deletedCount
+    const deleted = result.deletedCount ?? result.n ?? 0;
+
+    console.log(result);
+    console.log(req.params.id);
+
+    if (deleted > 0) {
+      return res.status(200).json({ message: 'Delete successful!' });
+    }
+
+    // Nothing matched → user tried to delete a post they don’t own
+    res.status(401).json({ message: 'Not authorized!' });
+  })
+ .catch(error =>{  
+    res.status(500).json({  
+      message: "Deletion Not Done!"  
+    });  
+  });  
    });
 
    module.exports = router;

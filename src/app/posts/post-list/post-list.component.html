@@ -1,9 +1,27 @@
+<div class="search-bar">
+  <mat-form-field appearance="outline" class="search-input">
+    <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by title" />
+  </mat-form-field>
+</div>
+
+<div class="paginator">
+<mat-paginator
+ class="pagination"
+      [length]="totalposts"
+      [pageSize]="postperpage"
+      [pageSizeOptions]="pageSizeOption"
+      (page)="onChangedPage($event)">
+</mat-paginator>
+
+</div>
+
 <div class="post-list">
+   
     <mat-card>
       <mat-spinner *ngIf="Loading"></mat-spinner>  
   
       <mat-accordion *ngIf="posts.length > 0 && !Loading">
-        <mat-expansion-panel *ngFor="let post of posts">
+        <mat-expansion-panel *ngFor="let post of filteredPosts">
           <mat-expansion-panel-header>
             {{ post.title }}
           </mat-expansion-panel-header>
@@ -14,7 +32,7 @@
   
           <p>{{ post.content }}</p>
   
-          <mat-action-row *ngIf="userIsAuthenticated">
+          <mat-action-row *ngIf= "userIsAuthenticated && userId === post.creator">  
             <a mat-button color="primary" [routerLink]="['/edit', post.id]">EDIT</a>  
             <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
           </mat-action-row>
@@ -27,9 +45,3 @@
   
   </div>
   
-   <mat-paginator
-      [length]="totalposts"
-      [pageSize]="postperpage"
-      [pageSizeOptions]="pageSizeOption"
-      (page)="onChangedPage($event)">
-    </mat-paginator>
